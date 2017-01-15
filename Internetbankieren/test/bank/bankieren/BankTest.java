@@ -5,11 +5,14 @@
  */
 package bank.bankieren;
 
+import fontys.util.NumberDoesntExistException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import java.lang.RuntimeException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,6 +22,7 @@ import static org.junit.Assert.*;
 public class BankTest {
     
     private Bank bank;
+    private Money money;
     public BankTest() {
     }
     
@@ -128,23 +132,62 @@ public class BankTest {
         assertEquals(nr, result.getNr());
     }
     
-
     /**
      * Test of maakOver method, of class Bank.
+     * @throws java.lang.Exception
+     * @throws fontys.util.NumberDoesntExistException
      */
-    @Test
-    public void testMaakOver() throws Exception {
-        System.out.println("maakOver");
-        int source = 0;
-        int destination = 0;
-        Money money = null;
-        Bank instance = null;
-        boolean expResult = false;
-        boolean result = instance.maakOver(source, destination, money);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    @Test(expected = RuntimeException.class)
+    public void testMaakOver1() throws RuntimeException, NumberDoesntExistException {
+        System.out.println("maakOver1");
+        money = new Money(10, "€");
+        int source = 1;
+        int destination = 1;
+        bank.maakOver(source, destination, money);
     }
+    /**
+     * method that checks if the method throws an runtime exception when there is not entered a positive number in the money paramater
+     * @throws RuntimeException
+     * @throws NumberDoesntExistException 
+     */
+    @Test(expected = RuntimeException.class)
+    public void testMaakOver2() throws RuntimeException, NumberDoesntExistException {
+        System.out.println("maakOver2");
+        money = new Money(0, "€");
+        int source = 1;
+        int destination = 2;
+        bank.maakOver(source, destination, money);
+    }
+    /**
+     * there is no source for this method so it throws a number does not excist exception
+     * @throws RuntimeException
+     * @throws NumberDoesntExistException 
+     */
+    @Test(expected = NumberDoesntExistException.class)
+    public void testMaakOver3() throws RuntimeException, NumberDoesntExistException {
+        System.out.println("maakOver3");
+        money = new Money(10, "€");
+        int source = 1;
+        int destination = 2;
+        bank.maakOver(source, destination, money);
+    }
+    /**
+     * 
+     * @throws RuntimeException
+     * @throws NumberDoesntExistException 
+     */
+    public void testMaakOver4() throws RuntimeException, NumberDoesntExistException {
+        System.out.println("maakOver4");
+        money = new Money(10, "€");
+        //test1
+        int source = bank.openRekening("test1", "eindhoven");
+        System.out.println(source);
+        //test2
+        int destination = bank.openRekening("test2", "eindhoven");
+        System.out.println(destination);
+        assertTrue(bank.maakOver(source, destination, money));
+    }
+    
 
     /**
      * Test of getName method, of class Bank.
