@@ -101,22 +101,33 @@ public class BankTest {
         int result = bank.openRekening(name, city);
         assertEquals(expResult, result);
     }
-    
 
     /**
      * Test of getRekening method, of class Bank.
+     * if nr is null the method will return null
      */
     @Test
-    public void testGetRekening() {
-        System.out.println("getRekening");
+    public void testGetRekening1() {
+        System.out.println("getRekening1");
         int nr = 0;
-        Bank instance = null;
         IRekening expResult = null;
-        IRekening result = instance.getRekening(nr);
+        IRekening result = bank.getRekening(nr);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
+    
+    /**
+     * Test of getRekening method, of class Bank.
+     * if nr is 1 the method will return an IRekening that we just created
+     */
+    @Test
+    public void testGetRekening2() {
+        System.out.println("getRekening1");
+        int nr = 1;
+        bank.openRekening("Thomas", "Eindhoven");
+        IRekening result = bank.getRekening(nr);
+        assertEquals(nr, result.getNr());
+    }
+    
 
     /**
      * Test of maakOver method, of class Bank.
