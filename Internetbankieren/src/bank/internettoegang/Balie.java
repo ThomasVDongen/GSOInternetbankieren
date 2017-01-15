@@ -50,6 +50,7 @@ public class Balie extends UnicastRemoteObject implements IBalie {
 		if (loginaccount.checkWachtwoord(wachtwoord)) {
 			IBankiersessie sessie = new Bankiersessie(loginaccount
 					.getReknr(), bank);
+                        
 			
 		 	return sessie;
 		}
