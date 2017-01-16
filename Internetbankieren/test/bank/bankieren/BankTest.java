@@ -20,33 +20,34 @@ import static org.junit.Assert.*;
  * @author Thomas
  */
 public class BankTest {
-    
+
     private Bank bank;
     private Money money;
+
     public BankTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
-        
+
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
         bank = new Bank("Rabobank");
     }
-    
+
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of openRekening method, of class Bank.
-     * with 2 empty values so it returns -1
+     * Test of openRekening method, of class Bank. with 2 empty values so it
+     * returns -1
      */
     @Test
     public void testOpenRekening1() {
@@ -58,10 +59,11 @@ public class BankTest {
         int expResult = -1;
         int result = bank.openRekening(name, city);
         assertEquals(expResult, result);
-    }   
+    }
+
     /**
-     * Test of openRekening method, of class Bank.
-     * with 1 empty value so it returns -1
+     * Test of openRekening method, of class Bank. with 1 empty value so it
+     * returns -1
      */
     @Test
     public void testOpenRekening2() {
@@ -74,10 +76,10 @@ public class BankTest {
         int result = bank.openRekening(name, city);
         assertEquals(expResult, result);
     }
-    
+
     /**
-     * Test of openRekening method, of class Bank.
-     * with 1 empty value so it returns -1
+     * Test of openRekening method, of class Bank. with 1 empty value so it
+     * returns -1
      */
     @Test
     public void testOpenRekening3() {
@@ -90,9 +92,10 @@ public class BankTest {
         int result = bank.openRekening(name, city);
         assertEquals(expResult, result);
     }
+
     /**
-     * Test of openRekening method, of class Bank.
-     * with correct inputs so wil return 1
+     * Test of openRekening method, of class Bank. with correct inputs so wil
+     * return 1
      */
     @Test
     public void testOpenRekening4() {
@@ -107,8 +110,8 @@ public class BankTest {
     }
 
     /**
-     * Test of getRekening method, of class Bank.
-     * if nr is null the method will return null
+     * Test of getRekening method, of class Bank. if nr is null the method will
+     * return null
      */
     @Test
     public void testGetRekening1() {
@@ -118,9 +121,23 @@ public class BankTest {
         IRekening result = bank.getRekening(nr);
         assertEquals(expResult, result);
     }
-    
+
+    /**
+     * Test of getRekening method, of class Bank. if nr is 1 the method will
+     * return an IRekening that we just created
+     */
+    @Test
+    public void testGetRekening2() {
+        System.out.println("getRekening1");
+        int nr = 1;
+        bank.openRekening("Thomas", "Eindhoven");
+        IRekening result = bank.getRekening(nr);
+        assertEquals(nr, result.getNr());
+    }
+
     /**
      * Test of maakOver method, of class Bank.
+     *
      * @throws java.lang.Exception
      * @throws fontys.util.NumberDoesntExistException
      */
@@ -132,10 +149,13 @@ public class BankTest {
         int destination = 1;
         bank.maakOver(source, destination, money);
     }
+
     /**
-     * method that checks if the method throws an runtime exception when there is not entered a positive number in the money paramater
+     * method that checks if the method throws an runtime exception when there
+     * is not entered a positive number in the money paramater
+     *
      * @throws RuntimeException
-     * @throws NumberDoesntExistException 
+     * @throws NumberDoesntExistException
      */
     @Test(expected = RuntimeException.class)
     public void testMaakOver2() throws RuntimeException, NumberDoesntExistException {
@@ -145,10 +165,13 @@ public class BankTest {
         int destination = 2;
         bank.maakOver(source, destination, money);
     }
+
     /**
-     * there is no source for this method so it throws a number does not excist exception
+     * there is no source for this method so it throws a number does not excist
+     * exception
+     *
      * @throws RuntimeException
-     * @throws NumberDoesntExistException 
+     * @throws NumberDoesntExistException
      */
     @Test(expected = NumberDoesntExistException.class)
     public void testMaakOver3() throws RuntimeException, NumberDoesntExistException {
@@ -158,11 +181,13 @@ public class BankTest {
         int destination = 2;
         bank.maakOver(source, destination, money);
     }
+
     /**
-     * 
+     *
      * @throws RuntimeException
-     * @throws NumberDoesntExistException 
+     * @throws NumberDoesntExistException
      */
+    @Test
     public void testMaakOver4() throws RuntimeException, NumberDoesntExistException {
         System.out.println("maakOver4");
         money = new Money(-10, "€");
@@ -170,7 +195,20 @@ public class BankTest {
         int destination = bank.openRekening("test2", "eindhoven");
         assertTrue(bank.maakOver(source, destination, money));
     }
-    
+
+    @Test
+    public void testMaakOver5() throws RuntimeException, NumberDoesntExistException {
+        System.out.println("maakOver5");
+        money = new Money(10, "€");
+        //test1
+        int source = bank.openRekening("test1", "eindhoven");
+        System.out.println(source);
+        //test2
+        int destination = bank.openRekening("test2", "eindhoven");
+        System.out.println(destination);
+        System.out.println(bank.maakOver(source, destination, money));
+        assertTrue(bank.maakOver(source, destination, money));
+    }
 
     /**
      * Test of getName method, of class Bank.
@@ -182,5 +220,5 @@ public class BankTest {
         String result = bank.getName();
         assertEquals(expResult, result);
     }
-    
+
 }
