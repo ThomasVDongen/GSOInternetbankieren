@@ -125,7 +125,7 @@ public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
     }
 
     @Override
-    public boolean NaarCentrale(int rekeningNR, Money saldo) throws RemoteException, NumberDoesntExistException {
+    public boolean muteer(int rekeningNR, Money saldo) throws RemoteException, NumberDoesntExistException {
         IRekeningTbvBank rekening = (IRekeningTbvBank) getRekening(rekeningNR);
         if (rekening != null) {
             if (saldo.isPositive()) {
