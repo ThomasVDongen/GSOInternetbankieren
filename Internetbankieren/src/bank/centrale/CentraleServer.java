@@ -5,10 +5,29 @@
  */
 package bank.centrale;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Scanner;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 /**
  *
  * @author koenv
  */
-public class CentraleServer {
-    
+public class CentraleServer extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        try {
+            Centrale centrale = new Centrale();
+
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.rebind("centrale", registry);
+        } catch(RemoteException rE) {
+            rE.printStackTrace();
+        }
+
+    }
 }
