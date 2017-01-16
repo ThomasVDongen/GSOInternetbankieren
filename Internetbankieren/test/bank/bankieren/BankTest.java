@@ -120,19 +120,6 @@ public class BankTest {
     }
     
     /**
-     * Test of getRekening method, of class Bank.
-     * if nr is 1 the method will return an IRekening that we just created
-     */
-    @Test
-    public void testGetRekening2() {
-        System.out.println("getRekening1");
-        int nr = 1;
-        bank.openRekening("Thomas", "Eindhoven");
-        IRekening result = bank.getRekening(nr);
-        assertEquals(nr, result.getNr());
-    }
-    
-    /**
      * Test of maakOver method, of class Bank.
      * @throws java.lang.Exception
      * @throws fontys.util.NumberDoesntExistException
@@ -191,12 +178,9 @@ public class BankTest {
     @Test
     public void testGetName1() {
         System.out.println("getName1");
-        Bank instance = null;
-        String expResult = "";
-        String result = instance.getName();
+        String expResult = "Rabobank";
+        String result = bank.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
