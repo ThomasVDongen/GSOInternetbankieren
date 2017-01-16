@@ -1,14 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bank.centrale;
 
-/**
- *
- * @author koenv
- */
-public class ICentrale {
-    
+import bank.bankieren.Money;
+import bank.bankieren.IBankCentrale;
+import fontys.util.NumberDoesntExistException;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface ICentrale extends Remote {
+
+    void registreerBank(String bankName, IBankCentrale bank) throws RemoteException;
+
+    boolean maakOver(int source, int destination, Money amount) throws RemoteException, NumberDoesntExistException;
+
+    int getRekNr(String bankName) throws RemoteException;
 }
