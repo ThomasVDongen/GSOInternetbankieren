@@ -5,7 +5,7 @@
  */
 package bank.centrale;
 
-import bank.bankieren.IBankCentrale;
+import bank.centrale.IBankCentrale;
 import bank.bankieren.Money;
 import fontys.util.NumberDoesntExistException;
 import java.rmi.RemoteException;
