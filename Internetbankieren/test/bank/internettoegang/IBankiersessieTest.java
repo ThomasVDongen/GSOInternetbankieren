@@ -9,8 +9,6 @@ import bank.bankieren.Bank;
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
 import bank.centrale.Centrale;
-import fontys.util.InvalidSessionException;
-import fontys.util.NumberDoesntExistException;
 import java.rmi.RemoteException;
 import org.junit.After;
 import org.junit.AfterClass;
