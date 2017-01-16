@@ -100,8 +100,8 @@ public class BankTest {
         ///setting Thomas
         String name = "Thomas";
         String city = "Eindhoven";
-        /// it is supposed to return 1 cause its the first one created
-        int expResult = 1;
+        /// it is supposed to return 100000000 cause its the first one created
+        int expResult = 100000000;
         int result = bank.openRekening(name, city);
         assertEquals(expResult, result);
     }
@@ -178,13 +178,14 @@ public class BankTest {
      */
     public void testMaakOver4() throws RuntimeException, NumberDoesntExistException {
         System.out.println("maakOver4");
-        money = new Money(10, "€");
+        money = new Money(-10, "€");
         //test1
         int source = bank.openRekening("test1", "eindhoven");
         System.out.println(source);
         //test2
         int destination = bank.openRekening("test2", "eindhoven");
         System.out.println(destination);
+        System.out.println(bank.maakOver(source, destination, money));
         assertTrue(bank.maakOver(source, destination, money));
     }
     
