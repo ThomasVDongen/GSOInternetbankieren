@@ -179,13 +179,8 @@ public class BankTest {
     public void testMaakOver4() throws RuntimeException, NumberDoesntExistException {
         System.out.println("maakOver4");
         money = new Money(-10, "€");
-        //test1
         int source = bank.openRekening("test1", "eindhoven");
-        System.out.println(source);
-        //test2
         int destination = bank.openRekening("test2", "eindhoven");
-        System.out.println(destination);
-        System.out.println(bank.maakOver(source, destination, money));
         assertTrue(bank.maakOver(source, destination, money));
     }
     
