@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  */
 public class BankTest {
 
-    private Bank bank;
+    private IBank bank;
     private Money money;
 
     public BankTest() {
@@ -123,19 +123,6 @@ public class BankTest {
     }
 
     /**
-     * Test of getRekening method, of class Bank. if nr is 1 the method will
-     * return an IRekening that we just created
-     */
-    @Test
-    public void testGetRekening2() {
-        System.out.println("getRekening1");
-        int nr = 1;
-        bank.openRekening("Thomas", "Eindhoven");
-        IRekening result = bank.getRekening(nr);
-        assertEquals(nr, result.getNr());
-    }
-
-    /**
      * Test of maakOver method, of class Bank.
      *
      * @throws java.lang.Exception
@@ -190,25 +177,26 @@ public class BankTest {
     @Test
     public void testMaakOver4() throws RuntimeException, NumberDoesntExistException {
         System.out.println("maakOver4");
-        money = new Money(-10, "€");
+        money = new Money(10, "€");
         int source = bank.openRekening("test1", "eindhoven");
         int destination = bank.openRekening("test2", "eindhoven");
         assertTrue(bank.maakOver(source, destination, money));
     }
-
-    @Test
+    
+    /**
+     * destination account is null
+     * @throws RuntimeException
+     * @throws NumberDoesntExistException 
+     */
+    @Test(expected = NumberDoesntExistException.class)
     public void testMaakOver5() throws RuntimeException, NumberDoesntExistException {
         System.out.println("maakOver5");
         money = new Money(10, "€");
-        //test1
         int source = bank.openRekening("test1", "eindhoven");
-        System.out.println(source);
-        //test2
-        int destination = bank.openRekening("test2", "eindhoven");
-        System.out.println(destination);
-        System.out.println(bank.maakOver(source, destination, money));
+        int destination = 1;
         assertTrue(bank.maakOver(source, destination, money));
     }
+    
 
     /**
      * Test of getName method, of class Bank.

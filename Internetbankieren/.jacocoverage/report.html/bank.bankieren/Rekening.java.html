@@ -52,7 +52,7 @@ class Rekening extends Observable implements IRekeningTbvBank {
     }
 
     boolean isTransferPossible(Money bedrag) {
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        return (bedrag.getCents() + saldo.getCents() &gt;= KREDIETLIMIET);</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        return (bedrag.getCents() + saldo.getCents() &gt;= KREDIETLIMIET);</span>
     }
 
     public IKlant getEigenaar() {
@@ -64,13 +64,13 @@ class Rekening extends Observable implements IRekeningTbvBank {
     }
 
     public boolean muteer(Money bedrag) {
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (bedrag.getCents() == 0) {</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (bedrag.getCents() == 0) {</span>
 <span class="nc" id="L68">            throw new RuntimeException(&quot; bedrag = 0 bij aanroep 'muteer'&quot;);</span>
         }
 
-<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (isTransferPossible(bedrag)) {</span>
-<span class="nc" id="L72">            saldo = Money.sum(saldo, bedrag);</span>
-<span class="nc" id="L73">            return true;</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (isTransferPossible(bedrag)) {</span>
+<span class="fc" id="L72">            saldo = Money.sum(saldo, bedrag);</span>
+<span class="fc" id="L73">            return true;</span>
         }
 <span class="nc" id="L75">        return false;</span>
     }

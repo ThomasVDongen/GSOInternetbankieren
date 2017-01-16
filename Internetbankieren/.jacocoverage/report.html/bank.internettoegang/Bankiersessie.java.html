@@ -22,15 +22,15 @@ public class Bankiersessie extends UnicastRemoteObject implements
     private int reknr;
     private IBank bank;
 
-<span class="nc" id="L25">    public Bankiersessie(int reknr, IBank bank) throws RemoteException {</span>
-<span class="nc" id="L26">        laatsteAanroep = System.currentTimeMillis();</span>
-<span class="nc" id="L27">        this.reknr = reknr;</span>
-<span class="nc" id="L28">        this.bank = bank;</span>
+<span class="fc" id="L25">    public Bankiersessie(int reknr, IBank bank) throws RemoteException {</span>
+<span class="fc" id="L26">        laatsteAanroep = System.currentTimeMillis();</span>
+<span class="fc" id="L27">        this.reknr = reknr;</span>
+<span class="fc" id="L28">        this.bank = bank;</span>
 
-<span class="nc" id="L30">    }</span>
+<span class="fc" id="L30">    }</span>
 
     public boolean isGeldig() {
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        return System.currentTimeMillis() - laatsteAanroep &lt; GELDIGHEIDSDUUR;</span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        return System.currentTimeMillis() - laatsteAanroep &lt; GELDIGHEIDSDUUR;</span>
     }
 
     @Override
@@ -38,26 +38,26 @@ public class Bankiersessie extends UnicastRemoteObject implements
             throws NumberDoesntExistException, InvalidSessionException,
             RemoteException {
 
-<span class="nc" id="L41">        updateLaatsteAanroep();</span>
+<span class="fc" id="L41">        updateLaatsteAanroep();</span>
 
-<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (reknr == bestemming) {</span>
-<span class="nc" id="L44">            throw new RuntimeException(</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (reknr == bestemming) {</span>
+<span class="fc" id="L44">            throw new RuntimeException(</span>
                     &quot;source and destination must be different&quot;);
         }
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (!bedrag.isPositive()) {</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (!bedrag.isPositive()) {</span>
 <span class="nc" id="L48">            throw new RuntimeException(&quot;amount must be positive&quot;);</span>
         }
 
-<span class="nc" id="L51">        return bank.maakOver(reknr, bestemming, bedrag);</span>
+<span class="fc" id="L51">        return bank.maakOver(reknr, bestemming, bedrag);</span>
     }
 
     private void updateLaatsteAanroep() throws InvalidSessionException {
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (!isGeldig()) {</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (!isGeldig()) {</span>
 <span class="nc" id="L56">            throw new InvalidSessionException(&quot;session has been expired&quot;);</span>
         }
 
-<span class="nc" id="L59">        laatsteAanroep = System.currentTimeMillis();</span>
-<span class="nc" id="L60">    }</span>
+<span class="fc" id="L59">        laatsteAanroep = System.currentTimeMillis();</span>
+<span class="fc" id="L60">    }</span>
 
     @Override
     public IRekening getRekening() throws InvalidSessionException,

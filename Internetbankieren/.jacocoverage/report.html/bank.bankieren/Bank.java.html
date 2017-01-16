@@ -49,7 +49,7 @@ public class Bank implements IBank {
 
     private IKlant getKlant(String name, String city) {
 <span class="fc bfc" id="L51" title="All 2 branches covered.">        for (IKlant k : clients) {</span>
-<span class="pc bpc" id="L52" title="2 of 4 branches missed.">            if (k.getNaam().equals(name) &amp;&amp; k.getPlaats().equals(city)) {</span>
+<span class="pc bpc" id="L52" title="1 of 4 branches missed.">            if (k.getNaam().equals(name) &amp;&amp; k.getPlaats().equals(city)) {</span>
 <span class="nc" id="L53">                return k;</span>
             }
 <span class="fc" id="L55">        }</span>
@@ -73,29 +73,29 @@ public class Bank implements IBank {
         }
 
 <span class="fc" id="L75">        IRekeningTbvBank source_account = (IRekeningTbvBank) getRekening(source);</span>
-<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (source_account == null) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (source_account == null) {</span>
 <span class="fc" id="L77">            throw new NumberDoesntExistException(&quot;account &quot; + source</span>
                     + &quot; unknown at &quot; + name);
         }
 
-<span class="nc" id="L81">        Money negative = Money.difference(new Money(0, money.getCurrency()),</span>
+<span class="fc" id="L81">        Money negative = Money.difference(new Money(0, money.getCurrency()),</span>
                 money);
-<span class="nc" id="L83">        boolean success = source_account.muteer(negative);</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (!success) {</span>
+<span class="fc" id="L83">        boolean success = source_account.muteer(negative);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (!success) {</span>
 <span class="nc" id="L85">            return false;</span>
         }
 
-<span class="nc" id="L88">        IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(destination);</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (dest_account == null) {</span>
-<span class="nc" id="L90">            throw new NumberDoesntExistException(&quot;account &quot; + destination</span>
+<span class="fc" id="L88">        IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(destination);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (dest_account == null) {</span>
+<span class="fc" id="L90">            throw new NumberDoesntExistException(&quot;account &quot; + destination</span>
                     + &quot; unknown at &quot; + name);
         }
 
-<span class="nc" id="L94">        rl.lock();</span>
+<span class="fc" id="L94">        rl.lock();</span>
         try {
-<span class="nc" id="L96">            success = dest_account.muteer(money);</span>
+<span class="fc" id="L96">            success = dest_account.muteer(money);</span>
 
-<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (!success) // rollback</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">            if (!success) // rollback</span>
             {
 <span class="nc" id="L100">                source_account.muteer(money);</span>
             }
@@ -103,9 +103,9 @@ public class Bank implements IBank {
 <span class="nc" id="L103">        } catch (Exception ex) {</span>
 <span class="nc" id="L104">            success = false;</span>
         } finally {
-<span class="nc" id="L106">            rl.unlock();</span>
-<span class="nc" id="L107">        }</span>
-<span class="nc" id="L108">        return success;</span>
+<span class="pc" id="L106">            rl.unlock();</span>
+<span class="pc" id="L107">        }</span>
+<span class="fc" id="L108">        return success;</span>
     }
 
     @Override
