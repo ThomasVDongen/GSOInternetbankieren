@@ -1,5 +1,7 @@
 package bank.bankieren;
 
+import java.util.Observable;
+
 interface IRekeningTbvBank extends IRekening {
 	/**
 	 * het saldo van deze bankrekening wordt met bedrag aangepast, tenzij het

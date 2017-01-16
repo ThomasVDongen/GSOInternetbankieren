@@ -8,9 +8,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Bank implements IBank {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -8728841131739353765L;
     private Map<Integer, IRekeningTbvBank> accounts;
     private Collection<IKlant> clients;
@@ -34,6 +31,7 @@ public class Bank implements IBank {
 
         IKlant klant = getKlant(name, city);
         IRekeningTbvBank account = new Rekening(nieuwReknr, klant, Money.EURO);
+        
         accounts.put(nieuwReknr, account);
         rl.lock();
 

@@ -26,7 +26,6 @@ public class Bankiersessie extends UnicastRemoteObject implements
         laatsteAanroep = System.currentTimeMillis();
         this.reknr = reknr;
         this.bank = bank;
-
     }
 
     public boolean isGeldig() {
@@ -53,6 +52,7 @@ public class Bankiersessie extends UnicastRemoteObject implements
 
     private void updateLaatsteAanroep() throws InvalidSessionException {
         if (!isGeldig()) {
+            
             throw new InvalidSessionException("session has been expired");
         }
 
