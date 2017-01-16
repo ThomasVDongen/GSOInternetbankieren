@@ -1,12 +1,15 @@
 package bank.bankieren;
 
+import bank.centrale.IBankCentrale;
+import bank.centrale.ICentrale;
 import fontys.util.*;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Bank implements IBank {
+public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
 
     private static final long serialVersionUID = -8728841131739353765L;
     private Map<Integer, IRekeningTbvBank> accounts;
@@ -14,16 +17,24 @@ public class Bank implements IBank {
     private int nieuwReknr;
     private String name;
     private ReentrantLock rl;
+    private ICentrale cs;
 
-    public Bank(String name) {
+    /**
+     *
+     * @param name
+     * @throws java.rmi.RemoteException
+     */
+    public Bank(String name, ICentrale centrale) throws RemoteException {
         accounts = new HashMap<Integer, IRekeningTbvBank>();
         clients = new ArrayList<IKlant>();
         nieuwReknr = 100000000;
         this.name = name;
-
+        this.cs = centrale;
         rl = new ReentrantLock();
+        
     }
 
+    @Override
     public int openRekening(String name, String city) {
         if (name.equals("") || city.equals("")) {
             return -1;
@@ -31,7 +42,7 @@ public class Bank implements IBank {
 
         IKlant klant = getKlant(name, city);
         IRekeningTbvBank account = new Rekening(nieuwReknr, klant, Money.EURO);
-        
+
         accounts.put(nieuwReknr, account);
         rl.lock();
 
@@ -56,10 +67,12 @@ public class Bank implements IBank {
         return klant;
     }
 
+    @Override
     public IRekening getRekening(int nr) {
         return accounts.get(nr);
     }
 
+    @Override
     public boolean maakOver(int source, int destination, Money money)
             throws NumberDoesntExistException {
         if (source == destination) {
@@ -111,4 +124,16 @@ public class Bank implements IBank {
         return name;
     }
 
+    @Override
+    public boolean NaarCentrale(int rekeningNR, Money saldo) throws RemoteException, NumberDoesntExistException {
+        IRekeningTbvBank rekening = (IRekeningTbvBank) getRekening(rekeningNR);
+        if (rekening != null) {
+            if (saldo.isPositive()) {
+                return rekening.muteer(saldo);
+            }
+        }
+
+        return false;
+    }
 }
+

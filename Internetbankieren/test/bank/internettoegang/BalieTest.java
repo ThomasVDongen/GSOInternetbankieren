@@ -6,6 +6,7 @@
 package bank.internettoegang;
 
 import bank.bankieren.Bank;
+import bank.centrale.Centrale;
 import java.rmi.RemoteException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,7 +25,7 @@ public class BalieTest {
     public Bank bank;
 
     public BalieTest() throws RemoteException {
-        bank = new Bank("testBank");
+        bank = new Bank("testBank", new Centrale());
         bank.openRekening("koen", "Hapert");
         instance = new Balie(bank);
     }

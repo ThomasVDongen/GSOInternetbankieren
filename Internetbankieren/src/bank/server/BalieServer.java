@@ -6,13 +6,17 @@
 package bank.server;
 
 import bank.bankieren.Bank;
+import bank.centrale.ICentrale;
 import bank.gui.BankierClient;
 import bank.internettoegang.Balie;
 import bank.internettoegang.IBalie;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +56,7 @@ public class BalieServer extends Application {
         }
     }
 
-    public boolean startBalie(String nameBank) {
+    public boolean startBalie(String nameBank) throws RemoteException, NotBoundException {
             
             FileOutputStream out = null;
             try {
@@ -66,7 +70,7 @@ public class BalieServer extends Application {
                 props.store(out, null);
                 out.close();
                 java.rmi.registry.LocateRegistry.createRegistry(port);
-                IBalie balie = new Balie(new Bank(nameBank));
+                IBalie balie = new Balie(new Bank(nameBank, getCentrale()));
                 Naming.rebind(nameBank, balie);
                
                 return true;
@@ -107,6 +111,9 @@ public class BalieServer extends Application {
         stage.setScene(scene);
         stage.sizeToScene();
         return (Initializable) loader.getController();
+    }
+    public ICentrale getCentrale() throws RemoteException, NotBoundException, MalformedURLException{
+        return (ICentrale) Naming.lookup("rmi://localhost:1100/centralbank");
     }
 
     /**
