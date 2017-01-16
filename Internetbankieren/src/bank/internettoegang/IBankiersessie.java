@@ -8,7 +8,6 @@ import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
 
 public interface IBankiersessie extends Remote {
-	
 
 	long GELDIGHEIDSDUUR = 6000; 
 	/**

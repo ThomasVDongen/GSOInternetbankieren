@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Bank.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Internetbankieren&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">bank.bankieren</a> &gt; <span class="el_source">Bank.java</span></div><h1>Bank.java</h1><pre class="source lang-java linenums">package bank.bankieren;
+
+import fontys.util.*;
+
+import java.rmi.RemoteException;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Bank implements IBank {
+
+    private static final long serialVersionUID = -8728841131739353765L;
+    private Map&lt;Integer, IRekeningTbvBank&gt; accounts;
+    private Collection&lt;IKlant&gt; clients;
+    private int nieuwReknr;
+    private String name;
+    private ReentrantLock rl;
+
+<span class="fc" id="L18">    public Bank(String name) {</span>
+<span class="fc" id="L19">        accounts = new HashMap&lt;Integer, IRekeningTbvBank&gt;();</span>
+<span class="fc" id="L20">        clients = new ArrayList&lt;IKlant&gt;();</span>
+<span class="fc" id="L21">        nieuwReknr = 100000000;</span>
+<span class="fc" id="L22">        this.name = name;</span>
+
+<span class="fc" id="L24">        rl = new ReentrantLock();</span>
+<span class="fc" id="L25">    }</span>
+
+    public int openRekening(String name, String city) {
+<span class="fc bfc" id="L28" title="All 4 branches covered.">        if (name.equals(&quot;&quot;) || city.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L29">            return -1;</span>
+        }
+
+<span class="fc" id="L32">        IKlant klant = getKlant(name, city);</span>
+<span class="fc" id="L33">        IRekeningTbvBank account = new Rekening(nieuwReknr, klant, Money.EURO);</span>
+        
+<span class="fc" id="L35">        accounts.put(nieuwReknr, account);</span>
+<span class="fc" id="L36">        rl.lock();</span>
+
+        //Acquire lock, safely increment nieuwReknr
+        try {
+<span class="fc" id="L40">            nieuwReknr++;</span>
+        } finally {
+<span class="pc" id="L42">            rl.unlock();</span>
+<span class="fc" id="L43">        }</span>
+
+<span class="fc" id="L45">        return nieuwReknr - 1;</span>
+    }
+
+    private IKlant getKlant(String name, String city) {
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (IKlant k : clients) {</span>
+<span class="pc bpc" id="L50" title="1 of 4 branches missed.">            if (k.getNaam().equals(name) &amp;&amp; k.getPlaats().equals(city)) {</span>
+<span class="nc" id="L51">                return k;</span>
+            }
+<span class="fc" id="L53">        }</span>
+<span class="fc" id="L54">        IKlant klant = new Klant(name, city);</span>
+<span class="fc" id="L55">        clients.add(klant);</span>
+<span class="fc" id="L56">        return klant;</span>
+    }
+
+    public IRekening getRekening(int nr) {
+<span class="fc" id="L60">        return accounts.get(nr);</span>
+    }
+
+    public boolean maakOver(int source, int destination, Money money)
+            throws NumberDoesntExistException {
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (source == destination) {</span>
+<span class="fc" id="L66">            throw new RuntimeException(</span>
+                    &quot;cannot transfer money to your own account&quot;);
+        }
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (!money.isPositive()) {</span>
+<span class="fc" id="L70">            throw new RuntimeException(&quot;money must be positive&quot;);</span>
+        }
+
+<span class="fc" id="L73">        IRekeningTbvBank source_account = (IRekeningTbvBank) getRekening(source);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (source_account == null) {</span>
+<span class="fc" id="L75">            throw new NumberDoesntExistException(&quot;account &quot; + source</span>
+                    + &quot; unknown at &quot; + name);
+        }
+
+<span class="fc" id="L79">        Money negative = Money.difference(new Money(0, money.getCurrency()),</span>
+                money);
+<span class="fc" id="L81">        boolean success = source_account.muteer(negative);</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (!success) {</span>
+<span class="nc" id="L83">            return false;</span>
+        }
+
+<span class="fc" id="L86">        IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(destination);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (dest_account == null) {</span>
+<span class="fc" id="L88">            throw new NumberDoesntExistException(&quot;account &quot; + destination</span>
+                    + &quot; unknown at &quot; + name);
+        }
+
+<span class="fc" id="L92">        rl.lock();</span>
+        try {
+<span class="fc" id="L94">            success = dest_account.muteer(money);</span>
+
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            if (!success) // rollback</span>
+            {
+<span class="nc" id="L98">                source_account.muteer(money);</span>
+            }
+
+<span class="nc" id="L101">        } catch (Exception ex) {</span>
+<span class="nc" id="L102">            success = false;</span>
+        } finally {
+<span class="pc" id="L104">            rl.unlock();</span>
+<span class="pc" id="L105">        }</span>
+<span class="fc" id="L106">        return success;</span>
+    }
+
+    @Override
+    public String getName() {
+<span class="fc" id="L111">        return name;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
