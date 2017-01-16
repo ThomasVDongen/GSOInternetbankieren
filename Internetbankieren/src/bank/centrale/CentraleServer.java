@@ -23,7 +23,7 @@ public class CentraleServer extends Application {
         try {
             Centrale centrale = new Centrale();
 
-            Registry registry = LocateRegistry.createRegistry(1099);
+            Registry registry = LocateRegistry.createRegistry(1100);
             registry.rebind("centrale", registry);
         } catch(RemoteException rE) {
             rE.printStackTrace();
