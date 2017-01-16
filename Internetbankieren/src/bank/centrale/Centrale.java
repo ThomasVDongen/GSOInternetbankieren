@@ -28,8 +28,8 @@ public class Centrale extends UnicastRemoteObject implements ICentrale {
     }
 
     @Override
-    public void registreerBank(String bankName, IBankCentrale bank) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void registreerBank(String bankNaam, IBankCentrale bank) throws RemoteException {
+        banken.put(bankNaam, bank);
     }
 
     @Override

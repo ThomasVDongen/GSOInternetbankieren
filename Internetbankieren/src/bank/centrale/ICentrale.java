@@ -13,5 +13,5 @@ public interface ICentrale extends Remote {
 
     boolean maakOver(int source, int destination, Money amount) throws RemoteException, NumberDoesntExistException;
 
-    int getRekNr(String bankName) throws RemoteException;
+    int getRekNr(String bankNaam) throws RemoteException;
 }
