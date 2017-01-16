@@ -9,6 +9,6 @@ package bank.centrale;
  *
  * @author koenv
  */
-public class Centrale {
+public class Centrale extends ICentrale{
     
 }
