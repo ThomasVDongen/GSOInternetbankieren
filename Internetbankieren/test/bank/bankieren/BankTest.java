@@ -191,13 +191,8 @@ public class BankTest {
     public void testMaakOver4() throws RuntimeException, NumberDoesntExistException {
         System.out.println("maakOver4");
         money = new Money(-10, "€");
-        //test1
         int source = bank.openRekening("test1", "eindhoven");
-        System.out.println(source);
-        //test2
         int destination = bank.openRekening("test2", "eindhoven");
-        System.out.println(destination);
-        System.out.println(bank.maakOver(source, destination, money));
         assertTrue(bank.maakOver(source, destination, money));
     }
 
@@ -221,12 +216,9 @@ public class BankTest {
     @Test
     public void testGetName1() {
         System.out.println("getName1");
-        Bank instance = null;
-        String expResult = "";
-        String result = instance.getName();
+        String expResult = "Rabobank";
+        String result = bank.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }
