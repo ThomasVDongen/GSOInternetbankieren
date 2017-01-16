@@ -10,6 +10,7 @@ import bank.bankieren.IRekening;
 import bank.bankieren.Money;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
+import java.rmi.RemoteException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -89,7 +90,6 @@ public class IBankiersessieTest {
     public void testMaakOver1() throws Exception {
         System.out.println("testMaakOver1");
         sessie = new Bankiersessie(test1, bank);
-        int fout = test1;
         sessie.maakOver(test1, correctBedrag);
     }
     /**
@@ -100,7 +100,7 @@ public class IBankiersessieTest {
     public void testMaakOver2() throws Exception {
         System.out.println("testMaakOver2");
         sessie = new Bankiersessie(test1, bank);
-        sessie.maakOver(test1, nulBedrag);
+        sessie.maakOver(test2, incorrectBedrag);
     }
     
     /**
@@ -121,9 +121,14 @@ public class IBankiersessieTest {
     @Test
     public void testLogUit() throws Exception {
         System.out.println("logUit");
-        sessie.logUit();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        sessie = new Bankiersessie(test1, bank);
+        try {
+            sessie.logUit();
+        }
+        catch(RemoteException ex){
+            fail(ex.getMessage());
+        }
+        assertTrue(true);
     }
 
     /**
@@ -133,10 +138,10 @@ public class IBankiersessieTest {
     @Test
     public void testGetRekening() throws Exception {
         System.out.println("getRekening");
-        IRekening expResult = null;
-        IRekening result = sessie.getRekening();
+        sessie = new Bankiersessie(test1, bank);
+        int expResult = test1;
+        IRekening rekening = sessie.getRekening();
+        int result = rekening.getNr();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }
