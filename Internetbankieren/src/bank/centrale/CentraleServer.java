@@ -24,10 +24,18 @@ public class CentraleServer extends Application {
             Centrale centrale = new Centrale();
 
             Registry registry = LocateRegistry.createRegistry(1100);
-            registry.rebind("centrale", registry);
+            registry.rebind("centrale", centrale);
+            System.out.println("binding gelukt");
         } catch(RemoteException rE) {
             rE.printStackTrace();
         }
 
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 }

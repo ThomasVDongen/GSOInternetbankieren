@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.ExportException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,34 +58,44 @@ public class BalieServer extends Application {
     }
 
     public boolean startBalie(String nameBank) throws RemoteException, NotBoundException {
-            
-            FileOutputStream out = null;
-            try {
-                this.nameBank = nameBank;
-                String address = java.net.InetAddress.getLocalHost().getHostAddress();
-                int port = 1099;
-                Properties props = new Properties();
-                String rmiBalie = address + ":" + port + "/" + nameBank;
-                props.setProperty("balie", rmiBalie);
-                out = new FileOutputStream(nameBank + ".props");
-                props.store(out, null);
-                out.close();
-                java.rmi.registry.LocateRegistry.createRegistry(port);
-                IBalie balie = new Balie(new Bank(nameBank, getCentrale()));
-                Naming.rebind(nameBank, balie);
-               
-                return true;
 
-            } catch (IOException ex) {
-                Logger.getLogger(BalieServer.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
+        FileOutputStream out = null;
+        try {
+            this.nameBank = nameBank;
+            String address = java.net.InetAddress.getLocalHost().getHostAddress();
+            int port = 1099;
+            Properties props = new Properties();
+            String rmiBalie = address + ":" + port + "/" + nameBank;
+            props.setProperty("balie", rmiBalie);
+            out = new FileOutputStream(nameBank + ".props");
+            props.store(out, null);
+            out.close();
+            boolean portSucceed = false;
+            while (!portSucceed) {
                 try {
-                    out.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(BalieServer.class.getName()).log(Level.SEVERE, null, ex);
+                    java.rmi.registry.LocateRegistry.createRegistry(port);
+                    portSucceed = true;
+                } catch (ExportException ex) {
+                    port++;
+                    java.rmi.registry.LocateRegistry.createRegistry(port);
                 }
             }
-            return false;
+
+            IBalie balie = new Balie(new Bank(nameBank, getCentrale()));
+            Naming.rebind(nameBank, balie);
+
+            return true;
+
+        } catch (IOException ex) {
+            Logger.getLogger(BalieServer.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(BalieServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return false;
     }
 
     public void gotoBankSelect() {
@@ -112,8 +123,9 @@ public class BalieServer extends Application {
         stage.sizeToScene();
         return (Initializable) loader.getController();
     }
-    public ICentrale getCentrale() throws RemoteException, NotBoundException, MalformedURLException{
-        return (ICentrale) Naming.lookup("rmi://localhost:1100/centralbank");
+
+    public ICentrale getCentrale() throws RemoteException, NotBoundException, MalformedURLException {
+        return (ICentrale) Naming.lookup("rmi://localhost:1100/centrale");
     }
 
     /**

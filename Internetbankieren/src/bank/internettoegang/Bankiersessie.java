@@ -52,7 +52,7 @@ public class Bankiersessie extends UnicastRemoteObject implements
 
     private void updateLaatsteAanroep() throws InvalidSessionException {
         if (!isGeldig()) {
-            
+
             throw new InvalidSessionException("session has been expired");
         }
 
@@ -70,7 +70,6 @@ public class Bankiersessie extends UnicastRemoteObject implements
 
     @Override
     public void logUit() throws RemoteException {
-        
         UnicastRemoteObject.unexportObject(this, true);
     }
 

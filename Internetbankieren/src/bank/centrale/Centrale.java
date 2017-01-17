@@ -5,7 +5,6 @@
  */
 package bank.centrale;
 
-import bank.centrale.IBankCentrale;
 import bank.bankieren.Money;
 import fontys.util.NumberDoesntExistException;
 import java.rmi.RemoteException;
@@ -19,19 +18,41 @@ import java.util.Map;
  */
 public class Centrale extends UnicastRemoteObject implements ICentrale {
 
-    final Map<Integer, String> rekeningen = new HashMap<>();
-    private final Map<String, IBankCentrale> banken = new HashMap<>();
-    private final int THRESHOLD = 1000000;
+    final Map<Integer, String> rekeningen;
+    private final Map<String, IBankCentrale> banken;
+    //private final long THRESHOLD = 1000000000;//private final long THRESHOLD = 1000000000;
+
+    /**
+     *
+     * @throws RemoteException
+     */
 
     public Centrale() throws RemoteException {
+        rekeningen = new HashMap<>();
+        banken = new HashMap<>();
 
     }
 
+    /**
+     *
+     * @param bankNaam
+     * @param bank
+     * @throws RemoteException
+     */
     @Override
     public void registreerBank(String bankNaam, IBankCentrale bank) throws RemoteException {
         banken.put(bankNaam, bank);
     }
 
+    /**
+     *
+     * @param source
+     * @param destination
+     * @param amount
+     * @return
+     * @throws RemoteException
+     * @throws NumberDoesntExistException
+     */
     @Override
     public boolean maakOver(int source, int destination, Money amount) throws RemoteException, NumberDoesntExistException {
         IBankCentrale src = getBank(source);
@@ -51,24 +72,24 @@ public class Centrale extends UnicastRemoteObject implements ICentrale {
 
     @Override
     public synchronized int getRekNr(String bankName) throws RemoteException {
-
-        for (int i = 0; i > THRESHOLD; i++) {
+        
+        for (int i = 100000000;; i++) {
             if (!rekeningen.containsKey(i)) {
                 rekeningen.put(i, bankName);
+                System.out.println(i);
                 return i;
             }
         }
-        return -1;
     }
     /**
      * haal de bank op waar het speciale rekeningnr bijhoort
-     * @param rekNr
+     * @param rek
      * @return
      * @throws NumberDoesntExistException 
      */
-    IBankCentrale getBank(int rek) throws NumberDoesntExistException {
+    public IBankCentrale getBank(int rek) throws NumberDoesntExistException {
         String bankName = rekeningen.get(rek);
-        if (bankName == null) throw new NumberDoesntExistException("Rekening: " + rek + " is onbekend");
+        if (bankName.equals("")) throw new NumberDoesntExistException("Rekening: " + rek + " is onbekend");
         return banken.get(bankName);
     }
 

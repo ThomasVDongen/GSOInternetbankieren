@@ -70,7 +70,6 @@ class Rekening extends Observable implements IRekeningTbvBank {
 
         if (isTransferPossible(bedrag)) {
             saldo = Money.sum(saldo, bedrag);
-            notifyObservers("Saldo changed to: " + saldo + ". " + bedrag + " was added.");
             return true;
         }
         return false;

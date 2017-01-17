@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
 
@@ -18,19 +20,21 @@ public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
     private String name;
     private ReentrantLock rl;
     private ICentrale cs;
+    private IRekeningTbvBank account;
 
     /**
      *
      * @param name
+     * @param centrale
      * @throws java.rmi.RemoteException
      */
     public Bank(String name, ICentrale centrale) throws RemoteException {
         accounts = new HashMap<Integer, IRekeningTbvBank>();
         clients = new ArrayList<IKlant>();
-        nieuwReknr = 100000000;
         this.name = name;
         this.cs = centrale;
         rl = new ReentrantLock();
+        cs.registreerBank(name, this);
         
     }
 
@@ -39,21 +43,23 @@ public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
         if (name.equals("") || city.equals("")) {
             return -1;
         }
-
         IKlant klant = getKlant(name, city);
-        IRekeningTbvBank account = new Rekening(nieuwReknr, klant, Money.EURO);
-
-        accounts.put(nieuwReknr, account);
+        try {
+            account = new Rekening(cs.getRekNr(this.getName()), klant, Money.EURO);
+            accounts.put(account.getNr(), account);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
         rl.lock();
 
         //Acquire lock, safely increment nieuwReknr
         try {
-            nieuwReknr++;
+            System.out.println(account);
         } finally {
             rl.unlock();
         }
 
-        return nieuwReknr - 1;
+        return account.getNr();
     }
 
     private IKlant getKlant(String name, String city) {
@@ -74,8 +80,10 @@ public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
 
     @Override
     public boolean maakOver(int source, int destination, Money money)
-            throws NumberDoesntExistException {
-        if (source == destination) {
+            throws NumberDoesntExistException, RemoteException {
+        return cs.maakOver(source, destination, money);
+        
+        /*if (source == destination) {
             throw new RuntimeException(
                     "cannot transfer money to your own account");
         }
@@ -100,6 +108,7 @@ public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
         if (dest_account == null) {
             throw new NumberDoesntExistException("account " + destination
                     + " unknown at " + name);
+
         }
 
         rl.lock();
@@ -117,6 +126,7 @@ public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
             rl.unlock();
         }
         return success;
+*/
     }
 
     @Override
@@ -128,11 +138,9 @@ public class Bank extends UnicastRemoteObject implements IBank, IBankCentrale {
     public boolean muteer(int rekeningNR, Money saldo) throws RemoteException, NumberDoesntExistException {
         IRekeningTbvBank rekening = (IRekeningTbvBank) getRekening(rekeningNR);
         if (rekening != null) {
-            if (saldo.isPositive()) {
-                return rekening.muteer(saldo);
-            }
+            return rekening.muteer(saldo);
+            
         }
-
         return false;
     }
 }
