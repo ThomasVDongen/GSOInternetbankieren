@@ -77,7 +77,6 @@ public class BalieServer extends Application {
                     portSucceed = true;
                 } catch (ExportException ex) {
                     port++;
-                    java.rmi.registry.LocateRegistry.createRegistry(port);
                 }
             }
 

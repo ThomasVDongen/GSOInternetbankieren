@@ -52,7 +52,7 @@ public class BankTest {
      * returns -1
      */
     @Test
-    public void testOpenRekening1() {
+    public void testOpenRekening1() throws RemoteException {
         System.out.println("openRekening1");
         ///setting null
         String name = "";
@@ -68,7 +68,7 @@ public class BankTest {
      * returns -1
      */
     @Test
-    public void testOpenRekening2() {
+    public void testOpenRekening2() throws RemoteException {
         System.out.println("openRekening2");
         ///setting Thomas
         String name = "Thomas";
@@ -84,7 +84,7 @@ public class BankTest {
      * returns -1
      */
     @Test
-    public void testOpenRekening3() {
+    public void testOpenRekening3() throws RemoteException {
         System.out.println("openRekening3");
         ///setting Thomas
         String name = "";
@@ -100,7 +100,7 @@ public class BankTest {
      * return 1
      */
     @Test
-    public void testOpenRekening4() {
+    public void testOpenRekening4() throws RemoteException {
         System.out.println("openRekening4");
         ///setting Thomas
         String name = "Thomas";
@@ -116,7 +116,7 @@ public class BankTest {
      * return null
      */
     @Test
-    public void testGetRekening1() {
+    public void testGetRekening1() throws RemoteException {
         System.out.println("getRekening1");
         int nr = 0;
         IRekening expResult = null;
@@ -131,7 +131,7 @@ public class BankTest {
      * @throws fontys.util.NumberDoesntExistException
      */
     @Test(expected = RuntimeException.class)
-    public void testMaakOver1() throws RuntimeException, NumberDoesntExistException {
+    public void testMaakOver1() throws RuntimeException, NumberDoesntExistException, RemoteException {
         System.out.println("maakOver1");
         money = new Money(10, "€");
         int source = 1;
@@ -147,7 +147,7 @@ public class BankTest {
      * @throws NumberDoesntExistException
      */
     @Test(expected = RuntimeException.class)
-    public void testMaakOver2() throws RuntimeException, NumberDoesntExistException {
+    public void testMaakOver2() throws RuntimeException, NumberDoesntExistException, RemoteException {
         System.out.println("maakOver2");
         money = new Money(0, "€");
         int source = 1;
@@ -163,7 +163,7 @@ public class BankTest {
      * @throws NumberDoesntExistException
      */
     @Test(expected = NumberDoesntExistException.class)
-    public void testMaakOver3() throws RuntimeException, NumberDoesntExistException {
+    public void testMaakOver3() throws RuntimeException, NumberDoesntExistException, RemoteException {
         System.out.println("maakOver3");
         money = new Money(10, "€");
         int source = 1;
@@ -177,7 +177,7 @@ public class BankTest {
      * @throws NumberDoesntExistException
      */
     @Test
-    public void testMaakOver4() throws RuntimeException, NumberDoesntExistException {
+    public void testMaakOver4() throws RuntimeException, NumberDoesntExistException, RemoteException {
         System.out.println("maakOver4");
         money = new Money(10, "€");
         int source = bank.openRekening("test1", "eindhoven");
@@ -191,7 +191,7 @@ public class BankTest {
      * @throws NumberDoesntExistException 
      */
     @Test(expected = NumberDoesntExistException.class)
-    public void testMaakOver5() throws RuntimeException, NumberDoesntExistException {
+    public void testMaakOver5() throws RuntimeException, NumberDoesntExistException, RemoteException {
         System.out.println("maakOver5");
         money = new Money(10, "€");
         int source = bank.openRekening("test1", "eindhoven");
@@ -204,7 +204,7 @@ public class BankTest {
      * Test of getName method, of class Bank.
      */
     @Test
-    public void testGetName1() {
+    public void testGetName1() throws RemoteException {
         System.out.println("getName1");
         String expResult = "Rabobank";
         String result = bank.getName();

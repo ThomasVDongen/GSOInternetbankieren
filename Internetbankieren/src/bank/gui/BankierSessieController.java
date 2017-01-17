@@ -62,7 +62,7 @@ public class BankierSessieController implements Initializable, RekeningObserver 
         IRekening rekening = null;
         try {
             rekening = sessie.getRekening();
-            
+            //rekening.addRekeningObserver(this);
             tfAccountNr.setText(rekening.getNr() + "");
             tfBalance.setText(rekening.getSaldo() + "");
             String eigenaar = rekening.getEigenaar().getNaam() + " te "
@@ -118,7 +118,6 @@ public class BankierSessieController implements Initializable, RekeningObserver 
 
     @Override
     public void update(IRekening rek) {
-        
         tfBalance.setText(rek.getSaldo().toString());
     }
 }

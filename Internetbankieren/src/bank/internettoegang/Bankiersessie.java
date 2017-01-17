@@ -6,14 +6,9 @@ import java.rmi.server.UnicastRemoteObject;
 import bank.bankieren.IBank;
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
-import bank.bankieren.RekeningObserver;
 
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Bankiersessie extends UnicastRemoteObject implements
         IBankiersessie{
