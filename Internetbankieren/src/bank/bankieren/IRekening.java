@@ -8,5 +8,7 @@ public interface IRekening extends Serializable {
   Money getSaldo();
   IKlant getEigenaar();
   int getKredietLimietInCenten();
+  void updateRekeningObserver();
+  void addRekeningObserver(RekeningObserver rO);
 }
 

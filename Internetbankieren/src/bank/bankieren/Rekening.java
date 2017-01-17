@@ -2,13 +2,14 @@ package bank.bankieren;
 
 import java.util.Observable;
 
-class Rekening extends Observable implements IRekeningTbvBank {
+class Rekening implements IRekeningTbvBank {
 
     private static final long serialVersionUID = 7221569686169173632L;
     private static final int KREDIETLIMIET = -10000;
     private int nr;
     private IKlant eigenaar;
     private Money saldo;
+    private RekeningObserver rO;
 
     /**
      * creatie van een bankrekening met saldo van 0.0<br>
@@ -70,6 +71,7 @@ class Rekening extends Observable implements IRekeningTbvBank {
 
         if (isTransferPossible(bedrag)) {
             saldo = Money.sum(saldo, bedrag);
+            updateRekeningObserver();
             return true;
         }
         return false;
@@ -78,5 +80,15 @@ class Rekening extends Observable implements IRekeningTbvBank {
     @Override
     public int getKredietLimietInCenten() {
         return KREDIETLIMIET;
+    }
+
+    @Override
+    public void updateRekeningObserver() {
+        rO.update(this);
+    }
+
+    @Override
+    public void addRekeningObserver(RekeningObserver rO) {
+        this.rO = rO;
     }
 }

@@ -4,11 +4,7 @@ import fontys.util.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-/**
- * @author 871059
- * 
- */
-public interface IBank extends Remote{
+public interface IBank extends Remote {
 
     /**
      * creatie van een nieuwe bankrekening met een identificerend rekeningnummer; 
