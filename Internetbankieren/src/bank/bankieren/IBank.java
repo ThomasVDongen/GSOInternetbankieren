@@ -1,14 +1,13 @@
 package bank.bankieren;
 
-import com.Fontys.Publisher.IRemotePublisherForDomain;
-import com.Fontys.Publisher.RemotePublisher;
 import fontys.util.*;
+import java.rmi.Remote;
 
 /**
  * @author 871059
  * 
  */
-public interface IBank extends IRemotePublisherForDomain {
+public interface IBank extends Remote {
 
     /**
      * creatie van een nieuwe bankrekening met een identificerend rekeningnummer; 

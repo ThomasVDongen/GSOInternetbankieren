@@ -7,6 +7,7 @@ package bank.gui;
 
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
+import bank.bankieren.RekeningObserver;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
 import fontys.util.InvalidSessionException;
@@ -29,7 +30,7 @@ import javafx.scene.control.TextField;
  *
  * @author frankcoenen
  */
-public class BankierSessieController implements Initializable {
+public class BankierSessieController implements Initializable, RekeningObserver {
 
     @FXML
     private Hyperlink hlLogout;
@@ -61,6 +62,7 @@ public class BankierSessieController implements Initializable {
         IRekening rekening = null;
         try {
             rekening = sessie.getRekening();
+            
             tfAccountNr.setText(rekening.getNr() + "");
             tfBalance.setText(rekening.getSaldo() + "");
             String eigenaar = rekening.getEigenaar().getNaam() + " te "
@@ -75,6 +77,8 @@ public class BankierSessieController implements Initializable {
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
 
     /**
      * Initializes the controller class.
@@ -110,5 +114,11 @@ public class BankierSessieController implements Initializable {
             e1.printStackTrace();
             taMessage.setText(e1.getMessage());
         }
+    }
+
+    @Override
+    public void update(IRekening rek) {
+        
+        tfBalance.setText(rek.getSaldo().toString());
     }
 }

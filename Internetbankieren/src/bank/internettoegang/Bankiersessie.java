@@ -6,6 +6,7 @@ import java.rmi.server.UnicastRemoteObject;
 import bank.bankieren.IBank;
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
+import bank.bankieren.RekeningObserver;
 
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
@@ -15,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Bankiersessie extends UnicastRemoteObject implements
-        IBankiersessie, Observer {
+        IBankiersessie{
 
     private static final long serialVersionUID = 1L;
     private long laatsteAanroep;
@@ -52,7 +53,7 @@ public class Bankiersessie extends UnicastRemoteObject implements
 
     private void updateLaatsteAanroep() throws InvalidSessionException {
         if (!isGeldig()) {
-            
+
             throw new InvalidSessionException("session has been expired");
         }
 
@@ -64,25 +65,14 @@ public class Bankiersessie extends UnicastRemoteObject implements
             RemoteException {
 
         updateLaatsteAanroep();
+        IRekening rekening = bank.getRekening(reknr);
 
-        return bank.getRekening(reknr);
+        return rekening;
     }
 
     @Override
     public void logUit() throws RemoteException {
-        
+
         UnicastRemoteObject.unexportObject(this, true);
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        try {
-            getRekening();
-        } catch (InvalidSessionException ex) {
-            Logger.getLogger(Bankiersessie.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Bankiersessie.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
 }
