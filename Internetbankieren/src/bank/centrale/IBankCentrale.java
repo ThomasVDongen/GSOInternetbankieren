@@ -16,7 +16,7 @@ import java.rmi.RemoteException;
  */
 public interface IBankCentrale extends Remote {
     
-    public boolean NaarCentrale(int RekeningNR, Money saldo) throws RemoteException, NumberDoesntExistException;
+    public boolean muteer(int RekeningNR, Money saldo) throws RemoteException, NumberDoesntExistException;
 
     String getName() throws RemoteException;
 }

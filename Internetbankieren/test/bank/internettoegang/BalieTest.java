@@ -51,7 +51,7 @@ public class BalieTest {
      * Test of openRekening method, of class Balie.
      */
     @Test
-    public void testOpenRekening() {
+    public void testOpenRekening() throws RemoteException {
         System.out.println("openRekening");
         String naam = "koen";
         String plaats = "hapert";
@@ -69,7 +69,7 @@ public class BalieTest {
      * Test of openRekening method, of class Balie.
      */
     @Test
-    public void testOpenRekeningFailName() {
+    public void testOpenRekeningFailName() throws RemoteException {
         System.out.println("openRekening");
         String naam = "";
         String plaats = "hapert";
@@ -87,7 +87,7 @@ public class BalieTest {
      * Test of openRekening method, of class Balie.
      */
     @Test
-    public void testOpenRekeningFailPlaats() {
+    public void testOpenRekeningFailPlaats() throws RemoteException {
         System.out.println("openRekening");
         String naam = "koen";
         String plaats = "";
@@ -105,7 +105,7 @@ public class BalieTest {
      * Test of openRekening method, of class Balie.
      */
     @Test
-    public void testOpenRekeningFailPassword() {
+    public void testOpenRekeningFailPassword() throws RemoteException {
         System.out.println("openRekening");
         String naam = "koen";
         String plaats = "hapert";
@@ -128,7 +128,6 @@ public class BalieTest {
         String accountnaam = "koen";
         String wachtwoord = "test123";
         if (instance.logIn(accountnaam, wachtwoord) != null) return;
-        // TODO review the generated test code and remove the default call to fail.
         fail("The user didn't retrieve a session");
     }
     
@@ -138,7 +137,6 @@ public class BalieTest {
         String accountnaam = "";
         String wachtwoord = "test123";
         if (instance.logIn(accountnaam, wachtwoord) == null) return;
-        // TODO review the generated test code and remove the default call to fail.
         fail("The user retrieved a session erroniously");
     }
 
