@@ -48,5 +48,4 @@ public class Centrale extends UnicastRemoteObject implements ICentrale {
         }
         return -1;
     }
-
 }
