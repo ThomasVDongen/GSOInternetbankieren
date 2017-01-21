@@ -7,12 +7,10 @@ package bank.gui;
 
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
-import bank.bankieren.RekeningObserver;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
-import fontyspublisher.ILocalPropertyListener;
 import fontyspublisher.IRemotePropertyListener;
 import fontyspublisher.RemotePublisher;
 import java.beans.PropertyChangeEvent;
@@ -22,7 +20,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -61,7 +58,6 @@ public class BankierSessieController extends UnicastRemoteObject
     private BankierClient application;
     private IBalie balie;
     private IBankiersessie sessie;
-    private RemotePublisher rp;
     private final String prop = "Bank";
 
     public BankierSessieController() throws RemoteException {
@@ -92,6 +88,23 @@ public class BankierSessieController extends UnicastRemoteObject
             taMessage.setText("verbinding verbroken");
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void update() {
+        IRekening rekening;
+        
+        try {
+            rekening = sessie.getRekening();
+            tfBalance.setText(rekening.getSaldo() + "");
+        } catch (InvalidSessionException ex) {
+            taMessage.setText("bankiersessie is verlopen");
+            Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (RemoteException ex) {
+            taMessage.setText("verbinding verbroken");
+            Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**

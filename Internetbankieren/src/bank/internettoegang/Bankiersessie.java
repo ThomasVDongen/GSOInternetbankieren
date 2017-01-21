@@ -10,7 +10,6 @@ import bank.bankieren.Money;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
 import fontyspublisher.IRemotePropertyListener;
-import fontyspublisher.Publisher;
 import fontyspublisher.RemotePublisher;
 
 public class Bankiersessie extends UnicastRemoteObject implements
