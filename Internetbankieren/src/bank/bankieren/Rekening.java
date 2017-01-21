@@ -87,13 +87,13 @@ class Rekening implements IRekeningTbvBank {
         return KREDIETLIMIET;
     }
 
-    @Override
-    public void updateRekeningObserver() {
-        rO.update(this);
-    }
-
-    @Override
-    public void addRekeningObserver(RekeningObserver rO) {
-        this.rO = rO;
-    }
+//    @Override
+//    public void updateRekeningObserver() {
+//        rO.update(this);
+//    }
+//
+//    @Override
+//    public void addRekeningObserver(RekeningObserver rO) {
+//        this.rO = rO;
+//    }
 }

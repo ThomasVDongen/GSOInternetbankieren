@@ -28,7 +28,6 @@ public class CentraleServer extends Application {
         } catch(RemoteException rE) {
             rE.printStackTrace();
         }
-
     }
     
     /**
