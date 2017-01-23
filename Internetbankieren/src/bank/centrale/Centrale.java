@@ -58,7 +58,7 @@ public class Centrale extends UnicastRemoteObject implements ICentrale {
         IBankCentrale src = getBank(source);
         IBankCentrale dst = getBank(destination);
         Money negative = Money.difference(new Money(0, amount.getCurrency()), amount);
-        boolean success = src.muteer(source, negative);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    boolean success = src.muteer(source, negative);
         if (!success) return false;
 
         success = dst.muteer(destination, amount);
@@ -92,5 +92,4 @@ public class Centrale extends UnicastRemoteObject implements ICentrale {
         if (bankName.equals("")) throw new NumberDoesntExistException("Rekening: " + rek + " is onbekend");
         return banken.get(bankName);
     }
-
 }

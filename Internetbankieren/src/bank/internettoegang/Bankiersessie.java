@@ -6,27 +6,28 @@ import java.rmi.server.UnicastRemoteObject;
 import bank.bankieren.IBank;
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
-import bank.bankieren.RekeningObserver;
 
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import fontyspublisher.IRemotePropertyListener;
+import fontyspublisher.RemotePublisher;
 
 public class Bankiersessie extends UnicastRemoteObject implements
-        IBankiersessie{
+        IBankiersessie {
 
     private static final long serialVersionUID = 1L;
     private long laatsteAanroep;
     private int reknr;
     private IBank bank;
+    private RemotePublisher rp;
+    private final String prop = "Bank";
 
     public Bankiersessie(int reknr, IBank bank) throws RemoteException {
         laatsteAanroep = System.currentTimeMillis();
         this.reknr = reknr;
         this.bank = bank;
+        this.rp = new RemotePublisher();
+        rp.registerProperty(prop);
     }
 
     public boolean isGeldig() {
@@ -48,7 +49,13 @@ public class Bankiersessie extends UnicastRemoteObject implements
             throw new RuntimeException("amount must be positive");
         }
 
-        return bank.maakOver(reknr, bestemming, bedrag);
+        if(bank.maakOver(reknr, bestemming, bedrag))
+        {
+           this.Update();
+           return true;
+        }
+        
+        return false;
     }
 
     private void updateLaatsteAanroep() throws InvalidSessionException {
@@ -74,5 +81,15 @@ public class Bankiersessie extends UnicastRemoteObject implements
     public void logUit() throws RemoteException {
 
         UnicastRemoteObject.unexportObject(this, true);
+    }
+
+    @Override
+    public void Update() throws RemoteException, InvalidSessionException {
+        rp.inform(prop, null, this.getRekening());
+    }
+
+    @Override
+    public void addListener(IRemotePropertyListener listener, String property) throws InvalidSessionException, RemoteException {
+        rp.subscribeRemoteListener(listener, property);
     }
 }

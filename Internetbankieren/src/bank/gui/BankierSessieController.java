@@ -7,13 +7,16 @@ package bank.gui;
 
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
-import bank.bankieren.RekeningObserver;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
+import fontyspublisher.IRemotePropertyListener;
+import fontyspublisher.RemotePublisher;
+import java.beans.PropertyChangeEvent;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +33,8 @@ import javafx.scene.control.TextField;
  *
  * @author frankcoenen
  */
-public class BankierSessieController implements Initializable, RekeningObserver {
+public class BankierSessieController extends UnicastRemoteObject
+        implements Initializable, IRemotePropertyListener {
 
     @FXML
     private Hyperlink hlLogout;
@@ -54,15 +58,23 @@ public class BankierSessieController implements Initializable, RekeningObserver 
     private BankierClient application;
     private IBalie balie;
     private IBankiersessie sessie;
+    private final String prop = "Bank";
 
-    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie) {
+    public BankierSessieController() throws RemoteException {
+    }
+
+    ;
+
+    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie) throws InvalidSessionException, RemoteException {
         this.balie = balie;
         this.sessie = sessie;
         this.application = application;
+        this.sessie.addListener(this, "Bank");
         IRekening rekening = null;
+
         try {
             rekening = sessie.getRekening();
-            
+
             tfAccountNr.setText(rekening.getNr() + "");
             tfBalance.setText(rekening.getSaldo() + "");
             String eigenaar = rekening.getEigenaar().getNaam() + " te "
@@ -78,7 +90,22 @@ public class BankierSessieController implements Initializable, RekeningObserver 
         }
     }
     
-    
+    public void update() {
+        IRekening rekening;
+        
+        try {
+            rekening = sessie.getRekening();
+            tfBalance.setText(rekening.getSaldo() + "");
+        } catch (InvalidSessionException ex) {
+            taMessage.setText("bankiersessie is verlopen");
+            Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (RemoteException ex) {
+            taMessage.setText("verbinding verbroken");
+            Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
 
     /**
      * Initializes the controller class.
@@ -116,9 +143,29 @@ public class BankierSessieController implements Initializable, RekeningObserver 
         }
     }
 
+//    @Override
+//    public void update(IRekening rek) {
+//
+//    }
+//    @Override
+//    public void propertyChange(PropertyChangeEvent pce) throws RemoteException {
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                tfBalance.setText((String)pce.getNewValue());
+//            }
+//        }
+//        );
+//    }
     @Override
-    public void update(IRekening rek) {
-        
-        tfBalance.setText(rek.getSaldo().toString());
+    public void propertyChange(PropertyChangeEvent pce) {
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+        IRekening rekening = (IRekening) pce.getNewValue();
+        tfBalance.setText(rekening.getSaldo() + "");
+//            }
+//        }
+//        );
     }
 }

@@ -22,14 +22,12 @@ public class CentraleServer extends Application {
     public void start(Stage primaryStage) throws Exception {
         try {
             Centrale centrale = new Centrale();
-
             Registry registry = LocateRegistry.createRegistry(1100);
             registry.rebind("centrale", centrale);
             System.out.println("binding gelukt");
         } catch(RemoteException rE) {
             rE.printStackTrace();
         }
-
     }
     
     /**

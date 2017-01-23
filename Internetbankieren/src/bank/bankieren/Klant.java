@@ -36,7 +36,7 @@ class Klant implements IKlant {
 	}
 	
 	public String toString() {
-		return naam + " woont in: " + plaats;
+		return naam + " woont in:               " + plaats;
 	}
 
 }

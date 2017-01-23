@@ -6,6 +6,7 @@ import bank.bankieren.IRekening;
 import bank.bankieren.Money;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
+import fontyspublisher.IRemotePropertyListener;
 
 public interface IBankiersessie extends Remote {
 
@@ -49,4 +50,8 @@ public interface IBankiersessie extends Remote {
 	 * @throws RemoteException
 	 */
 	IRekening getRekening() throws InvalidSessionException, RemoteException;
+        
+        public void Update() throws InvalidSessionException, RemoteException;
+        
+        public void addListener(IRemotePropertyListener listener, String property) throws InvalidSessionException, RemoteException;
 }
