@@ -9,6 +9,8 @@ import bank.bankieren.IRekening;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
 import fontys.util.InvalidSessionException;
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.RemotePublisher;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
@@ -40,11 +42,13 @@ public class LoginController implements Initializable {
     private IBalie balie;
     private IBankiersessie sessie;
     private BankierClient application;
+    private IRemotePublisherForDomain rp;
 
-    public void setApp(BankierClient application, IBalie balie, String AccountName) {
+    public void setApp(BankierClient application, IBalie balie, String AccountName, IRemotePublisherForDomain rp) {
         this.balie = balie;
         this.application = application;
         this.tfAccount.setText(AccountName);
+        this.rp = rp;
     }
 
     /**
@@ -55,12 +59,13 @@ public class LoginController implements Initializable {
         taMessages.setText("");
         tfAccount.setPromptText("Acccount");
         tfPassword.setPromptText("Wachtwoord");
+
     }
 
     @FXML
     private void login(ActionEvent event) throws InvalidSessionException {
         try {
-            sessie = balie.logIn(tfAccount.getText(), tfPassword.getText());
+            sessie = balie.logIn(tfAccount.getText(), tfPassword.getText(), rp);
             if (sessie == null) {
                 taMessages.setText("accountname or password not correct");
             } else {

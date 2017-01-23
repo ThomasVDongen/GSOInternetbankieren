@@ -12,6 +12,8 @@ import bank.gui.OpenRekeningController;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
 import fontyspublisher.IRemotePropertyListener;
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.RemotePublisher;
 import java.beans.PropertyChangeEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,8 +43,8 @@ public class BankierClient extends Application {
     private Stage stage;
     private final double MINIMUM_WINDOW_WIDTH = 390.0;
     private final double MINIMUM_WINDOW_HEIGHT = 500.0;
+    private IRemotePublisherForDomain rp;
     // 
-
     @Override
     public void start(Stage primaryStage) throws IOException {
 
@@ -51,6 +53,8 @@ public class BankierClient extends Application {
             stage.setTitle("Bankieren");
             stage.setMinWidth(MINIMUM_WINDOW_WIDTH);
             stage.setMinHeight(MINIMUM_WINDOW_HEIGHT);
+            this.rp = new RemotePublisher();
+            rp.registerProperty("Bank");
             gotoBankSelect();
 
             primaryStage.show();
@@ -88,7 +92,7 @@ public class BankierClient extends Application {
     protected void gotoLogin(IBalie balie, String accountNaam) {
         try {
             LoginController login = (LoginController) replaceSceneContent("Login.fxml");
-            login.setApp(this, balie, accountNaam);
+            login.setApp(this, balie, accountNaam, (RemotePublisher) rp);
         } catch (Exception ex) {
             Logger.getLogger(BankierClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,9 +110,8 @@ public class BankierClient extends Application {
     protected void gotoBankierSessie(IBalie balie, IBankiersessie sessie) {
         try {
             BankierSessieController sessionController = (BankierSessieController) replaceSceneContent("BankierSessie.fxml");
-            sessionController.setApp(this, balie, sessie);
-            
-            
+            sessionController.setApp(this, balie, sessie, (RemotePublisher) rp);
+
             stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

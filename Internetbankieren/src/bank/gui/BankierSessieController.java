@@ -12,6 +12,8 @@ import bank.internettoegang.IBankiersessie;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
 import fontyspublisher.IRemotePropertyListener;
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.IRemotePublisherForListener;
 import fontyspublisher.RemotePublisher;
 import java.beans.PropertyChangeEvent;
 import java.net.URL;
@@ -20,6 +22,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,18 +62,20 @@ public class BankierSessieController extends UnicastRemoteObject
     private IBalie balie;
     private IBankiersessie sessie;
     private final String prop = "Bank";
+    private IRemotePublisherForListener rp;
 
     public BankierSessieController() throws RemoteException {
     }
 
     ;
 
-    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie) throws InvalidSessionException, RemoteException {
+    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie, RemotePublisher rp) throws InvalidSessionException, RemoteException {
         this.balie = balie;
         this.sessie = sessie;
         this.application = application;
-        this.sessie.addListener(this, "Bank");
         IRekening rekening = null;
+        this.rp = rp;
+        rp.subscribeRemoteListener(this, prop);
 
         try {
             rekening = sessie.getRekening();
@@ -119,6 +124,7 @@ public class BankierSessieController extends UnicastRemoteObject
         try {
             sessie.logUit();
             application.gotoLogin(balie, "");
+            rp.unsubscribeRemoteListener(this, prop);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -133,7 +139,7 @@ public class BankierSessieController extends UnicastRemoteObject
                 taMessage.setText("can't transfer money to your own account");
             }
             long centen = (long) (Double.parseDouble(tfAmount.getText()) * 100);
-            sessie.maakOver(to, new Money(centen, Money.EURO));
+            if (sessie.maakOver(to, new Money(centen, Money.EURO)));
         } catch (RemoteException e1) {
             e1.printStackTrace();
             taMessage.setText("verbinding verbroken");
@@ -159,13 +165,13 @@ public class BankierSessieController extends UnicastRemoteObject
 //    }
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
         IRekening rekening = (IRekening) pce.getNewValue();
-        tfBalance.setText(rekening.getSaldo() + "");
-//            }
-//        }
-//        );
+        tfBalance.setText(rekening.getSaldo().toString() + "");
+            }
+        }
+        );
     }
 }

@@ -1,5 +1,7 @@
 package bank.internettoegang;
 
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.RemotePublisher;
 import java.rmi.*;
 
 
@@ -27,7 +29,7 @@ public interface IBalie extends Remote {
    * toegang krijgt tot de bankrekening die hoort bij het betreffende login-
    * account mits accountnaam en wachtwoord matchen, anders null
    */
-  IBankiersessie logIn(String accountnaam, String wachtwoord) throws RemoteException;
+  IBankiersessie logIn(String accountnaam, String wachtwoord, IRemotePublisherForDomain rp) throws RemoteException;
 
 }
 

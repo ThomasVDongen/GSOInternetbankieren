@@ -52,6 +52,4 @@ public interface IBankiersessie extends Remote {
 	IRekening getRekening() throws InvalidSessionException, RemoteException;
         
         public void Update() throws InvalidSessionException, RemoteException;
-        
-        public void addListener(IRemotePropertyListener listener, String property) throws InvalidSessionException, RemoteException;
 }

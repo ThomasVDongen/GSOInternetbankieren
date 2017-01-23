@@ -4,6 +4,8 @@ import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import bank.bankieren.*;
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.RemotePublisher;
 
 public class Balie extends UnicastRemoteObject implements IBalie {
 
@@ -42,14 +44,14 @@ public class Balie extends UnicastRemoteObject implements IBalie {
 		return accountname;
 	}
 
-	public IBankiersessie logIn(String accountnaam, String wachtwoord)
+	public IBankiersessie logIn(String accountnaam, String wachtwoord, IRemotePublisherForDomain rp)
 			throws RemoteException {
 		ILoginAccount loginaccount = loginaccounts.get(accountnaam);
 		if (loginaccount == null)
 			return null;
 		if (loginaccount.checkWachtwoord(wachtwoord)) {
 			IBankiersessie sessie = new Bankiersessie(loginaccount
-					.getReknr(), bank);
+					.getReknr(), bank, rp);
                         
 			
 		 	return sessie;

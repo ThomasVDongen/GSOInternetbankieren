@@ -6,6 +6,10 @@ import fontys.util.NumberDoesntExistException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ *
+ * @author Thomas
+ */
 public interface ICentrale extends Remote {
 
     void registreerBank(String bankName, IBankCentrale bank) throws RemoteException;
